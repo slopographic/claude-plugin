@@ -1,0 +1,82 @@
+{
+  "manifest_version": "0.3",
+  "name": "slopographic",
+  "display_name": "Slopographic",
+  "version": "0.1.0",
+  "description": "Use the Slopographic apps open in your browser (photo editing, PDF, video, conversions, workflows) from Claude: their real commands, your files in and results out.",
+  "long_description": "Slopographic's apps run in your browser. This extension lets Claude use the app you have open there, with the app's own commands, File convert and Slop Workflows, and bring files in from your computer and results back out.\n\n**Local only.** The extension runs a small server on your computer that listens on 127.0.0.1 only. The Slopographic page connects to it after you type a one-time pairing code that Claude shows you. Nothing else on your computer can use the page without the code, and no other website may connect.\n\n**Your data.** Files stay on your computer and in your browser. What leaves the computer is only what Claude itself sends to Anthropic as part of your conversation (tool calls and their results). Destructive actions are confirmed by you in the page.",
+  "author": {
+    "name": "Slopographic",
+    "url": "https://slopographic.com"
+  },
+  "homepage": "https://slopographic.com",
+  "documentation": "https://slopographic.com/how-it-works/#ai-apps",
+  "support": "https://github.com/slopographic/claude-plugin/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slopographic/claude-plugin.git"
+  },
+  "icon": "icon.png",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/index.mjs"
+      ],
+      "env": {}
+    }
+  },
+  "tools": [
+    {
+      "name": "connect",
+      "description": "Start connecting to Slopographic in the browser. Returns a pairing code that the person types into the Slopographic tab; show the code to the person exactly as given. Opens the site in the default browser (at the app given, e.g. \"photoslop\", \"workflows\", \"pdf\") when no tab is connected, or when open is true. Then call status with wait_seconds to wait for the tab."
+    },
+    {
+      "name": "status",
+      "description": "Show whether a Slopographic tab is connected, which tabs there are (the active one gets the slop_ tools) and the bridge port. With wait_seconds, waits up to that long (at most 180) for a tab to connect."
+    },
+    {
+      "name": "use_tab",
+      "description": "Make another connected Slopographic tab the active one (ids from status). The slop_ tools change to that tab's tools."
+    },
+    {
+      "name": "send_file_to_app",
+      "description": "Read a file on this computer and open it in the active Slopographic tab (into: \"app\", the way the app opens files) or put it in Slop Drive (into: \"drive\", then the slop_ tools can use it by name). Paths are relative to the working folder; a path outside it needs allow_outside: true and only when the person named that path."
+    },
+    {
+      "name": "save_result",
+      "description": "Save a file from the active Slopographic tab to this computer: a Slop Drive file (name or id from slop_list_files) or \"open\" for what the app has open. Will not replace an existing file unless overwrite is true. A path ending in / or naming a folder keeps the file's own name."
+    },
+    {
+      "name": "disconnect",
+      "description": "Disconnect the Slopographic tabs (or one tab), so this AI app can no longer use them until the person pairs again."
+    }
+  ],
+  "tools_generated": true,
+  "keywords": [
+    "slopographic",
+    "photo editor",
+    "pdf",
+    "image",
+    "video",
+    "convert",
+    "workflows",
+    "browser"
+  ],
+  "license": "MIT",
+  "privacy_policies": [
+    "https://slopographic.com/how-it-works/#ai-apps"
+  ],
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
+    "runtimes": {
+      "node": ">=20.0.0"
+    }
+  }
+}
